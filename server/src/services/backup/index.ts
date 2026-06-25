@@ -1,10 +1,9 @@
-import fs from 'node:fs';
+import fs, { readFileSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import Database from 'better-sqlite3';
-import { readFileSync } from 'node:fs';
-import { createRequire } from 'node:module';
 import { closeDb, getDb, getDbPath, initDb } from '../../db/index.js';
+import { getAppVersion } from '../../version.js';
 import {
   BACKUP_EXTENSION,
   type BackupManifest,
@@ -15,9 +14,6 @@ import {
   inspectBackup,
   type BackupInfo,
 } from './format.js';
-
-const require = createRequire(import.meta.url);
-const { version: APP_VERSION } = require('../../../package.json') as { version: string };
 
 const PLACEHOLDER_KEY = 'your-64-char-hex-key-here';
 const KEY_HEX_LEN = 64;
@@ -91,7 +87,7 @@ export async function exportBackup(dbPath = getDbPath()): Promise<{ buffer: Buff
     const manifest: BackupManifest = {
       format: 1,
       exportedAt: new Date().toISOString(),
-      appVersion: APP_VERSION,
+      appVersion: getAppVersion(),
       encryptionKey,
       stats: collectStats(db),
     };

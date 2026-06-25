@@ -118,6 +118,10 @@ if (!app.requestSingleInstanceLock()) {
   app.whenReady().then(async () => {
     if (process.platform === 'darwin') app.dock?.hide();
 
+    // Bundled server code cannot resolve package.json from inside app.asar;
+    // expose the desktop app version for backup manifests and logs.
+    process.env.FREEAPI_VERSION = app.getVersion();
+
     const cfg = loadConfig();
     const dbPath = path.join(app.getPath('userData'), 'freeapi.db');
     // Packaged: client/dist ships in extraResources (Resources/client-dist).
