@@ -9,6 +9,18 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DB_PATH = path.resolve(__dirname, '../../data/freeapi.db');
 
 let db: Database.Database;
+let resolvedDbPath = DB_PATH;
+
+export function getDbPath(): string {
+  return resolvedDbPath;
+}
+
+export function closeDb(): void {
+  if (db) {
+    db.close();
+    db = undefined!;
+  }
+}
 
 export function getDb(): Database.Database {
   if (!db) {
@@ -19,6 +31,7 @@ export function getDb(): Database.Database {
 
 export function initDb(dbPath?: string): Database.Database {
   const resolvedPath = dbPath ?? DB_PATH;
+  resolvedDbPath = resolvedPath;
   const isMemory = resolvedPath === ':memory:';
 
   if (!isMemory) {

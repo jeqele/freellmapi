@@ -1,5 +1,7 @@
 node_modules/
 dist/
+artifacts/
+*.freellmapi
 server/data/
 *.db
 *.db-wal
